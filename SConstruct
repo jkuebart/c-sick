@@ -49,6 +49,11 @@ if not GetOption("clean") and not GetOption("help"):
 	if use_dlopen:
 		config.env.AppendUnique(CPPDEFINES=["LUA_USE_DLOPEN"])
 
+	# OpenBSD's readline requires curses, so retry with it.
+	if (config.CheckLib(["edit", "readline"]) or
+	    config.CheckLib("curses") and config.CheckLib(["edit", "readline"])):
+		config.env.AppendUnique(CPPDEFINES=["LUA_USE_READLINE"])
+
 	env = config.Finish()
 
 luasrc = Glob("build/lua/src/*.c", exclude="build/lua/src/lua*.c")
