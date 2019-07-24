@@ -407,12 +407,12 @@ struct Producer
         return result;
     }
 
-    void consume(Target<Noisy> target, VolatilePtr<Noisy> ptr)
+    void consume(Target<Noisy> target) const
     {
         std::cout <<
             "consume(target=" << &*target <<
-            " ptr=" << ptr.get() <<
-            ")\n";
+            ") lastCreated=" << lastCreated.get() <<
+            '\n';
     }
 
     VolatilePtr<Noisy> lastCreated{};
@@ -447,10 +447,10 @@ int main()
             "result=" << result->name <<
             " lastCreated=" << producer.lastCreated->name <<
             '\n';
-        auto const resultRef{result.ptr()};
-        // The resultRef will follow the moved Target.
-        std::cout << R"(producer.consume(std::move(result), resultRef);)" << '\n';
-        producer.consume(std::move(result), resultRef);
+        // lastCreated will follow the moved Target.
+        std::cout << R"(producer.consume(std::move(result));)" << '\n';
+        producer.consume(std::move(result));
+        std::cout << "lastCreated=" << producer.lastCreated.get() << '\n';
     }
 
     std::cout << '\n' << R"(return 0;)" << '\n';
