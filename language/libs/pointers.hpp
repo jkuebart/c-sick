@@ -410,8 +410,8 @@ struct Producer
     void consume(Target<Noisy> target, VolatilePtr<Noisy> ptr)
     {
         std::cout <<
-            "consume(target=" << target->name <<
-            " ptr=" << ptr->name <<
+            "consume(target=" << &*target <<
+            " ptr=" << ptr.get() <<
             ")\n";
     }
 
